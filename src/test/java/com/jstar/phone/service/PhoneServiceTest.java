@@ -1,6 +1,7 @@
 package com.jstar.phone.service;
 
 import com.jstar.phone.entities.Phone;
+import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.repository.PhoneRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,5 +56,18 @@ class PhoneServiceTest {
 
         assertNull(returnedPhone.getBookedAt());
         assertNull(returnedPhone.getBookedBy());
+    }
+
+    @Test
+    void shouldThrowPhoneNotFoundException() {
+        var model = "Unknown Model";
+
+        when(phoneRepository.findByModel(model))
+                .thenReturn(Optional.empty());
+
+        assertThrows(PhoneNotFoundException.class,
+                () -> phoneService.bookPhone(model, "User1"));
+        assertThrows(PhoneNotFoundException.class,
+                () -> phoneService.returnPhone(model));
     }
 }
