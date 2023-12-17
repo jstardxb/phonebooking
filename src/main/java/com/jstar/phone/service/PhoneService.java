@@ -15,6 +15,8 @@ public class PhoneService {
 
     private PhoneRepository phoneRepository;
 
+    private NotificationService notificationService;
+
     public Phone bookPhone(String model, String user) {
         var phone = phoneRepository.findByModel(model)
                 .orElseThrow(PhoneNotFoundException::instance);
@@ -23,12 +25,16 @@ public class PhoneService {
             throw new PhoneNotAvailableException("Phone is already booked");
         }
 
-        return phoneRepository.save(Phone.builder()
+        var mobilePhone = phoneRepository.save(Phone.builder()
                 .id(phone.getId())
                 .model(model)
                 .bookedAt(LocalDateTime.now())
                 .bookedBy(user)
                 .build());
+
+        notificationService.sendBookNotification(mobilePhone);
+
+        return mobilePhone;
     }
 
     public Phone returnPhone(String model) {
