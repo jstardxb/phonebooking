@@ -2,6 +2,7 @@ package com.jstar.phone.service;
 
 import com.jstar.phone.entities.Phone;
 import com.jstar.phone.exception.PhoneNotAvailableException;
+import com.jstar.phone.exception.PhoneNotBookedException;
 import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.repository.PhoneRepository;
 import org.junit.jupiter.api.Test;

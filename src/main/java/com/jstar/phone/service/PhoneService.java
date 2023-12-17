@@ -2,6 +2,7 @@ package com.jstar.phone.service;
 
 import com.jstar.phone.entities.Phone;
 import com.jstar.phone.exception.PhoneNotAvailableException;
+import com.jstar.phone.exception.PhoneNotBookedException;
 import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.repository.PhoneRepository;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,10 @@ public class PhoneService {
     public Phone returnPhone(String model) {
         var phone = phoneRepository.findByModel(model)
                 .orElseThrow(PhoneNotFoundException::instance);
+
+        if (phone.isAvailable()) {
+            throw new PhoneNotBookedException("Cannot return the phone as it is not currently booked");
+        }
 
         var mobilePhone = phoneRepository.save(Phone.builder()
                 .id(phone.getId())
