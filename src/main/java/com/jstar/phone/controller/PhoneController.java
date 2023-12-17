@@ -1,6 +1,7 @@
 package com.jstar.phone.controller;
 
 import com.jstar.phone.dto.BookPhoneRequest;
+import com.jstar.phone.dto.ReturnPhoneRequest;
 import com.jstar.phone.entities.Phone;
 import com.jstar.phone.service.PhoneService;
 import lombok.AllArgsConstructor;
@@ -19,5 +20,10 @@ public class PhoneController {
     @PostMapping("/book")
     public Phone bookPhone(@RequestBody BookPhoneRequest bookPhoneRequest) {
         return phoneService.bookPhone(bookPhoneRequest.getModel(), bookPhoneRequest.getBookedBy());
+    }
+
+    @PostMapping("/return")
+    public Phone returnPhone(@RequestBody ReturnPhoneRequest returnPhoneRequest) {
+        return phoneService.returnPhone(returnPhoneRequest.getModel());
     }
 }
