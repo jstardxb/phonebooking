@@ -99,4 +99,20 @@ class PhoneControllerTest {
 
         verify(phoneService).returnPhone(anyString());
     }
+
+    @Test
+    void shouldThrowPhoneNotFoundExceptionWhenReturningUnknownPhone() throws Exception {
+        var request = new ReturnPhoneRequest("Unknown Model");
+
+        when(phoneService.returnPhone(anyString()))
+                .thenThrow(PhoneNotFoundException.class);
+
+        mockMvc.perform(post("/api/phone/return")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof PhoneNotFoundException));
+
+        verify(phoneService).returnPhone(anyString());
+    }
 }
