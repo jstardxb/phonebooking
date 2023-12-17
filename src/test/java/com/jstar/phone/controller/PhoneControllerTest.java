@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jstar.phone.dto.BookPhoneRequest;
 import com.jstar.phone.dto.ReturnPhoneRequest;
 import com.jstar.phone.entities.Phone;
+import com.jstar.phone.exception.GlobalExceptionHandler;
 import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.service.PhoneService;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,10 @@ class PhoneControllerTest {
 
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(mobilePhoneController).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(mobilePhoneController)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
     }
 
     @Test
