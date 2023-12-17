@@ -144,7 +144,7 @@ class PhoneControllerTest {
         mockMvc.perform(post("/api/phone/return")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof PhoneNotBookedException));
 
         verify(phoneService).returnPhone(anyString());
