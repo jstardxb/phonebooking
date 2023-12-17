@@ -23,8 +23,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -98,6 +97,23 @@ class PhoneControllerTest {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof PhoneNotAvailableException));
 
         verify(phoneService).bookPhone(anyString(), anyString());
+    }
+
+    @Test
+    void shouldValidateBookPhoneRequest() throws Exception {
+        var invalidRequest = new BookPhoneRequest("", "");
+
+        mockMvc.perform(post("/api/phone/book")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    var content = result.getResponse().getContentAsString();
+                    assertTrue(content.contains("Model cannot be blank"));
+                    assertTrue(content.contains("Booked by cannot be blank"));
+                });
+
+        verify(phoneService, times(0)).bookPhone(anyString(), anyString());
     }
 
     @Test
