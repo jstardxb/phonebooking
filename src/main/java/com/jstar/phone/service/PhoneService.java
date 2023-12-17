@@ -24,4 +24,16 @@ public class PhoneService {
                 .bookedBy(user)
                 .build());
     }
+
+    public Phone returnPhone(String model) {
+        var phone = phoneRepository.findByModel(model)
+                .orElseThrow(()->new IllegalArgumentException("Phone not found"));
+
+        return phoneRepository.save(Phone.builder()
+                .id(phone.getId())
+                .model(model)
+                .bookedAt(null)
+                .bookedBy(null)
+                .build());
+    }
 }
