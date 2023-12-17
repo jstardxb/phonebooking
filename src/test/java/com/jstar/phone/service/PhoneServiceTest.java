@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +26,9 @@ class PhoneServiceTest {
 
     @InjectMocks
     private PhoneService phoneService;
+
+    @Mock
+    private NotificationService notificationService;
 
     @Test
     void shouldBookPhoneSuccessfully() {
@@ -41,6 +45,8 @@ class PhoneServiceTest {
 
         assertNotNull(bookedPhone.getBookedAt());
         assertEquals(user, bookedPhone.getBookedBy());
+
+        verify(notificationService).sendBookNotification(any(Phone.class));
     }
 
     @Test
