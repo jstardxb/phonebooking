@@ -41,11 +41,15 @@ public class PhoneService {
         var phone = phoneRepository.findByModel(model)
                 .orElseThrow(PhoneNotFoundException::instance);
 
-        return phoneRepository.save(Phone.builder()
+        var mobilePhone = phoneRepository.save(Phone.builder()
                 .id(phone.getId())
                 .model(model)
                 .bookedAt(null)
                 .bookedBy(null)
                 .build());
+
+        notificationService.sendReturnNotification(mobilePhone);
+
+        return mobilePhone;
     }
 }

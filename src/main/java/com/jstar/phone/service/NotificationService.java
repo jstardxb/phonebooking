@@ -11,4 +11,8 @@ public class NotificationService {
     public void sendBookNotification(Phone phone) {
         //TODO: Implement me
     }
+
+    public void sendReturnNotification(Phone phone) {
+        //TODO: Implement me
+    }
 }
