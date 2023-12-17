@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jstar.phone.dto.BookPhoneRequest;
 import com.jstar.phone.dto.ReturnPhoneRequest;
 import com.jstar.phone.entities.Phone;
+import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.service.PhoneService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +58,22 @@ class PhoneControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.model").value("Oneplus 9"))
                 .andExpect(jsonPath("$.bookedBy").value("User1"));
+
+        verify(phoneService).bookPhone(anyString(), anyString());
+    }
+
+    @Test
+    void shouldThrowPhoneNotFoundExceptionWhenBookingUnknownPhone() throws Exception {
+        var request = new BookPhoneRequest("Unknown Model", "User1");
+
+        when(phoneService.bookPhone(anyString(), anyString()))
+                .thenThrow(PhoneNotFoundException.class);
+
+        mockMvc.perform(post("/api/phone/book")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof PhoneNotFoundException));
 
         verify(phoneService).bookPhone(anyString(), anyString());
     }
