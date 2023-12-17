@@ -165,4 +165,20 @@ class PhoneControllerTest {
 
         verify(phoneService).returnPhone(anyString());
     }
+
+    @Test
+    void shouldValidateBookReturnRequest() throws Exception {
+        var invalidRequest = new ReturnPhoneRequest("");
+
+        mockMvc.perform(post("/api/phone/return")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> {
+                    var content = result.getResponse().getContentAsString();
+                    assertTrue(content.contains("Model cannot be blank"));
+                });
+
+        verify(phoneService, times(0)).returnPhone(anyString());
+    }
 }
