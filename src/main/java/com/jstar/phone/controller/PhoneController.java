@@ -24,7 +24,7 @@ public class PhoneController {
     }
 
     @PostMapping("/return")
-    public Phone returnPhone(@RequestBody ReturnPhoneRequest returnPhoneRequest) {
+    public Phone returnPhone(@RequestBody @Valid ReturnPhoneRequest returnPhoneRequest) {
         return phoneService.returnPhone(returnPhoneRequest.getModel());
     }
 }
