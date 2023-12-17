@@ -1,6 +1,7 @@
 package com.jstar.phone.service;
 
 import com.jstar.phone.entities.Phone;
+import com.jstar.phone.exception.PhoneNotAvailableException;
 import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.repository.PhoneRepository;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,18 @@ class PhoneServiceTest {
 
         assertNotNull(bookedPhone.getBookedAt());
         assertEquals(user, bookedPhone.getBookedBy());
+    }
+
+    @Test
+    void shouldThrowPhoneNotAvailableExceptionWhenPhoneAlreadyBooked() {
+        var model = "Oneplus 9";
+        var phone = new Phone(1L, model, LocalDateTime.now(), "User1");
+
+        when(phoneRepository.findByModel(model))
+                .thenReturn(Optional.of(phone));
+
+        assertThrows(PhoneNotAvailableException.class,
+                () -> phoneService.bookPhone(model, "User2"));
     }
 
     @Test
