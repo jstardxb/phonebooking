@@ -20,7 +20,7 @@ public class NotificationService {
     }
 
     public void sendReturnNotification(Phone phone) {
-        //TODO: Implement me
+        sendNotification(phone, PhoneNotificationStatus.RETURNED);
     }
 
     private void sendNotification(Phone phone, PhoneNotificationStatus status) {
