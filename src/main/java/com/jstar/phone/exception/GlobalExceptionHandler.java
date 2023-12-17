@@ -17,4 +17,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handlePhoneNotAvailable(PhoneNotAvailableException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(PhoneNotBookedException.class)
+    public ResponseEntity<Object> handlePhoneNotAvailable(PhoneNotBookedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
