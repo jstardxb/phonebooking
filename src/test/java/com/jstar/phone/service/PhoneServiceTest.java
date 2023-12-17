@@ -46,6 +46,7 @@ class PhoneServiceTest {
 
         assertNotNull(bookedPhone.getBookedAt());
         assertEquals(user, bookedPhone.getBookedBy());
+        assertEquals("No", bookedPhone.getAvailability() );
 
         verify(notificationService).sendBookNotification(any(Phone.class));
     }
@@ -76,6 +77,7 @@ class PhoneServiceTest {
 
         assertNull(returnedPhone.getBookedAt());
         assertNull(returnedPhone.getBookedBy());
+        assertEquals("Yes", returnedPhone.getAvailability() );
 
         verify(notificationService).sendReturnNotification(any(Phone.class));
     }
