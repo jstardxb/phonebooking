@@ -1,6 +1,7 @@
 package com.jstar.phone.service;
 
 import com.jstar.phone.entities.Phone;
+import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.repository.PhoneRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class PhoneService {
 
     public Phone bookPhone(String model, String user) {
         var phone = phoneRepository.findByModel(model)
-                .orElseThrow(()->new IllegalArgumentException("Phone not found"));
+                .orElseThrow(PhoneNotFoundException::instance);
 
         return phoneRepository.save(Phone.builder()
                 .id(phone.getId())
@@ -27,7 +28,7 @@ public class PhoneService {
 
     public Phone returnPhone(String model) {
         var phone = phoneRepository.findByModel(model)
-                .orElseThrow(()->new IllegalArgumentException("Phone not found"));
+                .orElseThrow(PhoneNotFoundException::instance);
 
         return phoneRepository.save(Phone.builder()
                 .id(phone.getId())
