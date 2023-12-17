@@ -58,4 +58,22 @@ class PhoneControllerTest {
 
         verify(phoneService).bookPhone(anyString(), anyString());
     }
+
+    @Test
+    void shouldReturnPhone() throws Exception {
+        var request = new ReturnPhoneRequest("Oneplus 9");
+        var expectedResponse = new Phone(1L, "Oneplus 9", null, null);
+
+        when(phoneService.returnPhone(anyString()))
+                .thenReturn(expectedResponse);
+
+        mockMvc.perform(post("/api/phone/return")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.model").value("Oneplus 9"))
+                .andExpect(jsonPath("$.bookedAt").doesNotExist());
+
+        verify(phoneService).returnPhone(anyString());
+    }
 }
