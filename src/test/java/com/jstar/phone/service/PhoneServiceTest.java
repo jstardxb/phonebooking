@@ -75,6 +75,8 @@ class PhoneServiceTest {
 
         assertNull(returnedPhone.getBookedAt());
         assertNull(returnedPhone.getBookedBy());
+
+        verify(notificationService).sendReturnNotification(any(Phone.class));
     }
 
     @Test
