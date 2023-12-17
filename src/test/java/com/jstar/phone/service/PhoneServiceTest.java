@@ -80,6 +80,18 @@ class PhoneServiceTest {
     }
 
     @Test
+    void shouldThrowPhoneNotBookedExceptionWhenPhoneIsNotBooked() {
+        var model = "Oneplus 9";
+        var phone = new Phone(1L, model, null, null);
+
+        when(phoneRepository.findByModel(model))
+                .thenReturn(Optional.of(phone));
+
+        assertThrows(PhoneNotBookedException.class,
+                () -> phoneService.returnPhone(model));
+    }
+
+    @Test
     void shouldThrowPhoneNotFoundException() {
         var model = "Unknown Model";
 
