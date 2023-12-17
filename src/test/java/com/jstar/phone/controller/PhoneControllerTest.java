@@ -5,6 +5,7 @@ import com.jstar.phone.dto.BookPhoneRequest;
 import com.jstar.phone.dto.ReturnPhoneRequest;
 import com.jstar.phone.entities.Phone;
 import com.jstar.phone.exception.GlobalExceptionHandler;
+import com.jstar.phone.exception.PhoneNotAvailableException;
 import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.service.PhoneService;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,6 +79,22 @@ class PhoneControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof PhoneNotFoundException));
+
+        verify(phoneService).bookPhone(anyString(), anyString());
+    }
+
+    @Test
+    void shouldThrowPhoneNotAvailableExceptionWhenPhoneAlreadyBooked() throws Exception {
+        var request = new BookPhoneRequest("Oneplus 9", "User2");
+
+        when(phoneService.bookPhone(anyString(), anyString()))
+                .thenThrow(new PhoneNotAvailableException("Phone is already booked"));
+
+        mockMvc.perform(post("/api/phone/book")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof PhoneNotAvailableException));
 
         verify(phoneService).bookPhone(anyString(), anyString());
     }
