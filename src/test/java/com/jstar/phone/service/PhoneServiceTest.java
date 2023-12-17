@@ -8,10 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -39,5 +39,21 @@ class PhoneServiceTest {
 
         assertNotNull(bookedPhone.getBookedAt());
         assertEquals(user, bookedPhone.getBookedBy());
+    }
+
+    @Test
+    void shouldReturnPhoneSuccessfully() {
+        var model = "Oneplus 9";
+        var phone = new Phone(1L, model, LocalDateTime.now(), "User1");
+
+        when(phoneRepository.findByModel(model))
+                .thenReturn(Optional.of(phone));
+        when(phoneRepository.save(any(Phone.class)))
+                .thenAnswer(i -> i.getArgument(0));
+
+        var returnedPhone = phoneService.returnPhone(model);
+
+        assertNull(returnedPhone.getBookedAt());
+        assertNull(returnedPhone.getBookedBy());
     }
 }
