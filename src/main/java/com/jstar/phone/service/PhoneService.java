@@ -1,6 +1,7 @@
 package com.jstar.phone.service;
 
 import com.jstar.phone.entities.Phone;
+import com.jstar.phone.exception.PhoneNotAvailableException;
 import com.jstar.phone.exception.PhoneNotFoundException;
 import com.jstar.phone.repository.PhoneRepository;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,10 @@ public class PhoneService {
     public Phone bookPhone(String model, String user) {
         var phone = phoneRepository.findByModel(model)
                 .orElseThrow(PhoneNotFoundException::instance);
+
+        if (!phone.isAvailable()) {
+            throw new PhoneNotAvailableException("Phone is already booked");
+        }
 
         return phoneRepository.save(Phone.builder()
                 .id(phone.getId())

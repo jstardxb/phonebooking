@@ -24,4 +24,8 @@ public class Phone {
     private String model;
     private LocalDateTime bookedAt;
     private String bookedBy;
+
+    public boolean isAvailable() {
+        return bookedAt == null && bookedBy == null;
+    }
 }
