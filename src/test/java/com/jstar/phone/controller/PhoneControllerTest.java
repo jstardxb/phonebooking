@@ -1,14 +1,18 @@
 package com.jstar.phone.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jstar.phone.dto.BookPhoneRequest;
 import com.jstar.phone.entities.Phone;
 import com.jstar.phone.service.PhoneService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +32,14 @@ class PhoneControllerTest {
     private PhoneService phoneService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @InjectMocks
+    private PhoneController mobilePhoneController;
+
+    @BeforeEach
+    void setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(mobilePhoneController).build();
+    }
 
     @Test
     void shouldBookPhone() throws Exception {
