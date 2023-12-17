@@ -1,5 +1,6 @@
 package com.jstar.phone.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +26,12 @@ public class Phone {
     private LocalDateTime bookedAt;
     private String bookedBy;
 
+    @JsonIgnore
     public boolean isAvailable() {
         return bookedAt == null && bookedBy == null;
+    }
+
+    public String getAvailability() {
+        return isAvailable() ? "Yes" : "No";
     }
 }
