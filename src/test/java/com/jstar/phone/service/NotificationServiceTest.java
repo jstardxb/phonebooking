@@ -45,4 +45,21 @@ class NotificationServiceTest {
                 eq("routingKey"),
                 any(PhoneNotification.class));
     }
+
+    @Test
+    void shouldSendReturnNotification() {
+        var phone = new Phone(1L, "Oneplus 9", LocalDateTime.now(), "User1");
+
+        when(messageConfig.getInternalExchange())
+                .thenReturn("exchange");
+        when(messageConfig.getInternalNotificationRoutingKeys())
+                .thenReturn("routingKey");
+
+        notificationService.sendReturnNotification(phone);
+
+        verify(rabbitTemplate).convertAndSend(
+                eq("exchange"),
+                eq("routingKey"),
+                any(PhoneNotification.class));
+    }
 }
