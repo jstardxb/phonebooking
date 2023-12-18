@@ -3,7 +3,8 @@ package com.jstar.phone.integration;
 import com.jstar.phone.dto.BookPhoneRequest;
 import com.jstar.phone.dto.ReturnPhoneRequest;
 import com.jstar.phone.entities.Phone;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,13 +12,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.containers.RabbitMQContainer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Disabled
 class PhoneBookingApplicationTests {
 
     @LocalServerPort
@@ -25,6 +25,21 @@ class PhoneBookingApplicationTests {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    private static final RabbitMQContainer rabbitMQContainer = new RabbitMQContainer("rabbitmq:latest");
+
+    @BeforeAll
+    static void setup() {
+        rabbitMQContainer.start();
+
+        System.setProperty("spring.rabbitmq.host", rabbitMQContainer.getHost());
+        System.setProperty("spring.rabbitmq.port", rabbitMQContainer.getAmqpPort().toString());
+    }
+
+    @AfterAll
+    static void teardown() {
+        rabbitMQContainer.stop();
+    }
 
     @Test
     void testBookPhone() {
